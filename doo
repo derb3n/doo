@@ -4,7 +4,8 @@ filename='./doofile'
 
 containerName=""
 start=""
-while read line; do
+
+while read -r line  || [ -n "$line" ]; do
     IFS=':' read -r -a data <<< "$line"
     if [ ${data[0]} == "container-name" ]
     then
