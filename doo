@@ -1,0 +1,31 @@
+#!/bin/bash
+
+filename='./doofile'
+
+containerName=""
+start=""
+while read line; do
+    IFS=':' read -r -a data <<< "$line"
+    if [ ${data[0]} == "container-name" ]
+    then
+    containerName=${data[1]}
+    fi
+
+    if [ ${data[0]} == "start" ]
+    then
+    start=${data[1]}
+    fi
+done < $filename
+
+if [[ ! $containerName == "" ]]
+then
+    if [ $1 == "start" ]
+    then
+    $start
+    else
+    containerID=$(docker ps -aqf "name=$containerName")
+    docker exec -it $containerID "$@"
+    fi
+else
+echo "[!] found no container configuration doofile"
+fi
