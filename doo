@@ -7,26 +7,27 @@ start=""
 
 while read -r line  || [ -n "$line" ]; do
     IFS=':' read -r -a data <<< "$line"
-    if [ ${data[0]} == "container-name" ]
+    if [[ "${data[0]}" == "container-name" ]]
     then
     containerName=${data[1]}
     fi
 
-    if [ ${data[0]} == "start" ]
+    if [[ "${data[0]}" == "start" ]]
     then
-    start=${data[1]}
+    start="$(IFS=':'; printf '%s' "${data[*]:1}")"
+    echo start
     fi
 done < $filename
 
-if [[ ! $containerName == "" ]]
-then
-    if [ $1 == "start" ]
+if [[ "$1" == "start" ]]
     then
+    echo "??"
+    echo "$start"
     $start
-    else
+elif [[ ! "$containerName" == "" ]]
+then
     containerID=$(docker ps -aqf "name=$containerName")
     docker exec -it $containerID "$@"
-    fi
 else
 echo "[!] found no container configuration doofile"
 fi
