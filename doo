@@ -21,8 +21,6 @@ done < $filename
 
 if [[ "$1" == "start" ]]
     then
-    echo "??"
-    echo "$start"
     $start
 elif [[ ! "$containerName" == "" ]]
 then
